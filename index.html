@@ -8,8 +8,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Supabase JS Library for Auth & Database integration -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -19,8 +17,8 @@
             brand: {
               purple: '#8b5cf6',
               blue: '#3b82f6',
-              dark: '#0a0814',
-              card: 'rgba(20, 16, 38, 0.75)',
+              dark: '#070510',
+              card: 'rgba(18, 14, 36, 0.75)',
               border: 'rgba(139, 92, 246, 0.25)',
               glow: 'rgba(139, 92, 246, 0.4)'
             }
@@ -55,9 +53,9 @@
       background-attachment: fixed;
     }
     .glass-card {
-      background: rgba(18, 14, 36, 0.7);
+      background: rgba(18, 14, 36, 0.75);
       backdrop-filter: blur(16px);
-      border: 1px solid rgba(139, 92, 246, 0.2);
+      border: 1px solid rgba(139, 92, 246, 0.25);
     }
     .glass-card:hover {
       border-color: rgba(139, 92, 246, 0.5);
@@ -80,82 +78,88 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-purple-600 selection:text-white">
 
-  <!-- ================= NAVBAR ================= -->
-  <nav class="sticky top-0 z-40 border-b border-purple-900/40 bg-black/60 backdrop-blur-md px-4 lg:px-8 py-3">
+  <!-- NAVIGATION BAR -->
+  <nav class="sticky top-0 z-40 border-b border-purple-900/40 bg-black/70 backdrop-blur-md px-4 lg:px-8 py-3">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <!-- Logo -->
       <a href="#" onclick="switchView('home')" class="flex items-center gap-3 group">
-        <img src="image_3cde13.jpg" alt="NOVA GRID Logo" class="h-10 w-10 object-contain rounded-lg border border-purple-500/40 group-hover:border-purple-400 transition" onerror="this.src='https://via.placeholder.com/40/7c3aed/ffffff?text=NG'">
+        <div class="w-10 h-10 rounded-xl bg-purple-900/50 border border-purple-500/50 flex items-center justify-center text-purple-400 font-black text-xl shadow-lg">
+          NG
+        </div>
         <span class="text-2xl font-black tracking-wider gradient-text">NOVA GRID</span>
       </a>
 
-      <!-- Desktop Nav -->
+      <!-- Navigation Links -->
       <div class="hidden md:flex items-center gap-6 font-medium text-sm text-gray-300">
         <button onclick="switchView('home')" class="hover:text-purple-400 transition">Home</button>
         <button onclick="switchView('plans')" class="hover:text-purple-400 transition">Plans</button>
         <button onclick="switchView('dashboard')" class="hover:text-purple-400 transition">Client Panel</button>
         <button onclick="switchView('feedback')" class="hover:text-purple-400 transition">Feedback</button>
-        <button onclick="switchView('admin')" class="text-xs px-2.5 py-1 rounded bg-purple-900/40 border border-purple-500/30 text-purple-300 hover:bg-purple-800/50">Admin Panel</button>
+        <button onclick="promptAdminLogin()" class="text-xs px-3 py-1.5 rounded-lg bg-purple-950/60 border border-purple-500/40 text-purple-300 hover:bg-purple-900/50 transition">
+          <i class="fa-solid fa-lock text-xs mr-1"></i> Admin Panel
+        </button>
       </div>
 
-      <!-- Auth Action -->
+      <!-- Access Code Area -->
       <div id="authNavArea" class="flex items-center gap-3">
-        <button onclick="openAuthModal('signin')" class="px-4 py-2 text-sm font-semibold text-white border border-purple-500/40 rounded-lg hover:bg-purple-900/30 transition">
-          Sign In
+        <button onclick="openAccessCodeModal()" class="px-4 py-2 text-sm font-semibold text-white border border-purple-500/40 rounded-xl hover:bg-purple-900/30 transition flex items-center gap-2">
+          <i class="fa-solid fa-key text-purple-400"></i> Enter Access Code
         </button>
-        <button onclick="openAuthModal('signup')" class="btn-cyber px-4 py-2 text-sm font-bold text-white rounded-lg shadow-lg">
-          Sign Up
+        <button onclick="generateNewAccessCode()" class="btn-cyber px-4 py-2 text-sm font-bold text-white rounded-xl shadow-lg flex items-center gap-2">
+          <i class="fa-solid fa-plus-circle"></i> Get New Code
         </button>
       </div>
     </div>
   </nav>
 
-  <!-- ================= MAIN CONTAINER ================= -->
+  <!-- MAIN CONTAINER -->
   <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-8">
 
     <!-- VIEW 1: HOME PAGE -->
     <section id="view-home" class="space-y-16">
-      <!-- Minimal Cyber Hero -->
       <div class="text-center py-12 space-y-6 max-w-3xl mx-auto">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/60 border border-purple-500/30 text-purple-300 text-xs font-semibold tracking-wider uppercase">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-950/60 border border-purple-500/30 text-purple-300 text-xs font-semibold tracking-wider uppercase">
           <i class="fa-solid fa-microchip text-blue-400"></i> Powered by AMD Ryzen 9 9950X3D
         </div>
         <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight gradient-text leading-tight">
-          High Performance Minecraft Hosting
+          Next-Gen Minecraft Server Hosting
         </h1>
-        <div class="flex flex-wrap justify-center gap-4 text-sm text-gray-300">
-          <span class="flex items-center gap-1.5"><i class="fa-solid fa-bolt text-purple-400"></i> Instant Provisioning</span>
-          <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-blue-400"></i> Enterprise DDoS Shield</span>
-          <span class="flex items-center gap-1.5"><i class="fa-solid fa-cube text-indigo-400"></i> Pterodactyl Panel</span>
+        <p class="text-gray-400 text-base md:text-lg">
+          No signups required. Instant setup with dynamic UPI payment verification and unique access codes.
+        </p>
+        <div class="flex flex-wrap justify-center gap-6 text-sm text-gray-300">
+          <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-purple-400"></i> Zero Signup System</span>
+          <span class="flex items-center gap-2"><i class="fa-solid fa-shield-halved text-blue-400"></i> Enterprise DDoS Shield</span>
+          <span class="flex items-center gap-2"><i class="fa-solid fa-cube text-indigo-400"></i> Pterodactyl Panel</span>
         </div>
         <div class="pt-4 flex justify-center gap-4">
-          <button onclick="switchView('plans')" class="btn-cyber text-lg px-8 py-3 rounded-xl font-bold text-white shadow-xl flex items-center gap-2">
-            Explore Plans <i class="fa-solid fa-arrow-right text-sm"></i>
+          <button onclick="switchView('plans')" class="btn-cyber text-lg px-8 py-3.5 rounded-xl font-bold text-white shadow-xl flex items-center gap-3">
+            Explore 7 Hosting Plans <i class="fa-solid fa-arrow-right text-sm"></i>
           </button>
         </div>
       </div>
 
-      <!-- Features Highlights Grid -->
+      <!-- Features Grid -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="glass-card p-6 rounded-2xl space-y-3">
           <div class="w-12 h-12 rounded-xl bg-purple-900/40 border border-purple-500/30 flex items-center justify-center text-purple-400 text-xl">
-            <i class="fa-solid fa-gauge-high"></i>
+            <i class="fa-solid fa-key"></i>
           </div>
-          <h3 class="text-lg font-bold text-white">Ryzen 9 9950X3D Speed</h3>
-          <p class="text-sm text-gray-400">Extreme single-thread performance guarantees smooth TPS even with heavily modded server packs.</p>
+          <h3 class="text-lg font-bold text-white">Unique Code Access</h3>
+          <p class="text-sm text-gray-400">Skip password forms. Control your servers using a single, secure unique access token.</p>
         </div>
         <div class="glass-card p-6 rounded-2xl space-y-3">
           <div class="w-12 h-12 rounded-xl bg-blue-900/40 border border-blue-500/30 flex items-center justify-center text-blue-400 text-xl">
-            <i class="fa-solid fa-lock"></i>
+            <i class="fa-solid fa-qrcode"></i>
           </div>
-          <h3 class="text-lg font-bold text-white">Advanced DDoS Shield</h3>
-          <p class="text-sm text-gray-400">Always-on multi-layered DDoS mitigation keeps your server online during attack waves.</p>
+          <h3 class="text-lg font-bold text-white">Instant UPI Dynamic QR</h3>
+          <p class="text-sm text-gray-400">Scan & pay with GPay, PhonePe, or Paytm. Enter your UTR to submit for immediate admin setup.</p>
         </div>
         <div class="glass-card p-6 rounded-2xl space-y-3">
           <div class="w-12 h-12 rounded-xl bg-indigo-900/40 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-xl">
             <i class="fa-solid fa-sliders"></i>
           </div>
-          <h3 class="text-lg font-bold text-white">Pterodactyl Panel Access</h3>
+          <h3 class="text-lg font-bold text-white">Pterodactyl Panel Control</h3>
           <p class="text-sm text-gray-400">Full control over console logs, file managers, database creation, and automatic backups.</p>
         </div>
       </div>
@@ -187,7 +191,7 @@
               <li class="pt-2 flex items-center justify-between"><span>NVMe Storage</span> <strong class="text-white">20GB</strong></li>
             </ul>
           </div>
-          <button onclick="startPurchase('Starter', '₹299')" class="mt-6 w-full py-2.5 rounded-xl font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg">
+          <button onclick="startPurchase('Starter', '299')" class="mt-6 w-full py-2.5 rounded-xl font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg">
             Order Starter
           </button>
         </div>
@@ -208,7 +212,7 @@
               <li class="pt-2 flex items-center justify-between"><span>NVMe Storage</span> <strong class="text-white">20GB</strong></li>
             </ul>
           </div>
-          <button onclick="startPurchase('Basic', '₹449')" class="mt-6 w-full py-2.5 rounded-xl font-bold bg-blue-600 hover:bg-blue-500 text-white transition shadow-lg">
+          <button onclick="startPurchase('Basic', '449')" class="mt-6 w-full py-2.5 rounded-xl font-bold bg-blue-600 hover:bg-blue-500 text-white transition shadow-lg">
             Order Basic
           </button>
         </div>
@@ -229,7 +233,7 @@
               <li class="pt-2 flex items-center justify-between"><span>NVMe Storage</span> <strong class="text-white">30GB</strong></li>
             </ul>
           </div>
-          <button onclick="startPurchase('Pro', '₹649')" class="mt-6 w-full py-2.5 rounded-xl font-bold btn-cyber text-white transition shadow-lg">
+          <button onclick="startPurchase('Pro', '649')" class="mt-6 w-full py-2.5 rounded-xl font-bold btn-cyber text-white transition shadow-lg">
             Order Pro
           </button>
         </div>
@@ -250,7 +254,7 @@
               <li class="pt-2 flex items-center justify-between"><span>NVMe Storage</span> <strong class="text-white">30GB</strong></li>
             </ul>
           </div>
-          <button onclick="startPurchase('Advanced', '₹849')" class="mt-6 w-full py-2.5 rounded-xl font-bold bg-amber-600 hover:bg-amber-500 text-white transition shadow-lg">
+          <button onclick="startPurchase('Advanced', '849')" class="mt-6 w-full py-2.5 rounded-xl font-bold bg-amber-600 hover:bg-amber-500 text-white transition shadow-lg">
             Order Advanced
           </button>
         </div>
@@ -271,7 +275,7 @@
               <li class="pt-2 flex items-center justify-between"><span>NVMe Storage</span> <strong class="text-white">40GB</strong></li>
             </ul>
           </div>
-          <button onclick="startPurchase('Premium', '₹1,099')" class="mt-6 w-full py-2.5 rounded-xl font-bold bg-rose-600 hover:bg-rose-500 text-white transition shadow-lg">
+          <button onclick="startPurchase('Premium', '1099')" class="mt-6 w-full py-2.5 rounded-xl font-bold bg-rose-600 hover:bg-rose-500 text-white transition shadow-lg">
             Order Premium
           </button>
         </div>
@@ -292,7 +296,7 @@
               <li class="pt-2 flex items-center justify-between"><span>NVMe Storage</span> <strong class="text-white">40GB</strong></li>
             </ul>
           </div>
-          <button onclick="startPurchase('Ultimate', '₹1,499')" class="mt-6 w-full py-2.5 rounded-xl font-bold bg-yellow-600 hover:bg-yellow-500 text-white transition shadow-lg">
+          <button onclick="startPurchase('Ultimate', '1499')" class="mt-6 w-full py-2.5 rounded-xl font-bold bg-yellow-600 hover:bg-yellow-500 text-white transition shadow-lg">
             Order Ultimate
           </button>
         </div>
@@ -313,7 +317,7 @@
               <li class="pt-2 flex items-center justify-between"><span>NVMe Storage</span> <strong class="text-white">60GB</strong></li>
             </ul>
           </div>
-          <button onclick="startPurchase('Enterprise', '₹2,199')" class="mt-6 w-full py-2.5 rounded-xl font-bold bg-cyan-600 hover:bg-cyan-500 text-white transition shadow-lg">
+          <button onclick="startPurchase('Enterprise', '2199')" class="mt-6 w-full py-2.5 rounded-xl font-bold bg-cyan-600 hover:bg-cyan-500 text-white transition shadow-lg">
             Order Enterprise
           </button>
         </div>
@@ -321,7 +325,7 @@
       </div>
     </section>
 
-    <!-- VIEW 3: QR CODE PAYMENT PAGE -->
+    <!-- VIEW 3: UPI QR CODE PAYMENT PAGE -->
     <section id="view-payment" class="hidden max-w-lg mx-auto space-y-6">
       <div class="glass-card p-8 rounded-3xl text-center space-y-6 border-purple-500/40">
         <div class="space-y-2">
@@ -330,31 +334,40 @@
           <div id="payPlanPrice" class="text-4xl font-black text-purple-300">₹299</div>
         </div>
 
-        <!-- Simulated UPI QR Code -->
+        <!-- Dynamic UPI QR Code Container -->
         <div class="p-4 bg-white rounded-2xl inline-block shadow-2xl border-4 border-purple-500/40">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi://pay?pa=novagrid@upi%26pn=NOVA%20GRID" alt="UPI Payment QR Code" class="w-48 h-48 mx-auto">
+          <img id="upiQrImage" src="" alt="UPI Payment QR Code" class="w-48 h-48 mx-auto">
         </div>
 
-        <div class="text-xs text-gray-400 space-y-1">
+        <div class="text-xs text-gray-400 space-y-2">
           <p><i class="fa-solid fa-qrcode text-purple-400"></i> Scan with GPay, PhonePe, or Paytm</p>
-          <p class="font-mono text-purple-300 text-sm">UPI ID: novagrid@upi</p>
+          <div class="flex items-center justify-center gap-2 font-mono text-purple-300 bg-purple-950/60 py-1.5 px-3 rounded-lg border border-purple-500/30">
+            <span>UPI ID: novagrid@upi</span>
+            <button onclick="copyUpiId()" class="text-purple-400 hover:text-white ml-2"><i class="fa-regular fa-copy"></i></button>
+          </div>
         </div>
 
-        <!-- Action Button -->
-        <div class="pt-2">
-          <button onclick="confirmPaymentAndSubmit()" class="w-full btn-cyber py-3 rounded-xl font-bold text-white text-lg shadow-xl flex items-center justify-center gap-2">
-            <i class="fa-solid fa-paper-plane"></i> Send Proof & Confirm
+        <!-- Order Form (UTR / Transaction ID Input) -->
+        <form onsubmit="confirmPaymentAndSubmit(event)" class="text-left space-y-4 pt-2">
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Enter 12-Digit UTR / Transaction ID</label>
+            <input type="text" id="payUtrInput" required pattern="[0-9A-Za-z]{8,16}" placeholder="e.g. 409218291048" class="w-full bg-black/50 border border-purple-500/30 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Your Access Code (Save this!)</label>
+            <input type="text" id="payAccessCodeInput" readonly class="w-full bg-purple-950/40 border border-purple-500/40 rounded-xl px-4 py-2.5 text-sm font-mono text-purple-300 font-bold focus:outline-none">
+          </div>
+          <button type="submit" class="w-full btn-cyber py-3 rounded-xl font-bold text-white text-lg shadow-xl flex items-center justify-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i> Submit Payment Proof
           </button>
-          <p class="text-xs text-gray-500 mt-2">After payment, click Send Proof to submit your order to admins.</p>
-        </div>
+        </form>
       </div>
     </section>
 
     <!-- VIEW 4: PENDING VERIFICATION PAGE -->
     <section id="view-pending" class="hidden max-w-lg mx-auto py-12 text-center space-y-6">
       <div class="glass-card p-8 rounded-3xl space-y-6 relative overflow-hidden border-yellow-500/30">
-        <!-- Pulse Radar Icon -->
-        <div class="relative w-24 h-24 mx-auto flex items-center justify-center">
+        <div class="relative w-20 h-20 mx-auto flex items-center justify-center">
           <div class="absolute inset-0 rounded-full border-2 border-yellow-500/30 animate-ping"></div>
           <div class="w-16 h-16 rounded-full bg-yellow-500/20 border border-yellow-400/50 flex items-center justify-center text-yellow-300 text-3xl">
             <i class="fa-solid fa-clock"></i>
@@ -362,20 +375,19 @@
         </div>
 
         <div class="space-y-2">
-          <h2 class="text-2xl font-bold text-white">Payment Verification Pending</h2>
-          <p class="text-sm text-gray-300">Your proof has been submitted! Our admin team is verifying your payment and preparing your Pterodactyl Panel link.</p>
+          <h2 class="text-2xl font-bold text-white">Verification Pending</h2>
+          <p class="text-sm text-gray-300">Your UTR has been logged. Our admin team will verify the payment and activate your server shorty.</p>
         </div>
 
         <div class="p-4 rounded-xl bg-purple-950/40 border border-purple-500/20 text-xs text-gray-400 text-left space-y-2">
+          <div class="flex justify-between"><span class="text-gray-500">Access Code:</span> <strong id="pendingAccessCode" class="text-purple-300 font-mono">--</strong></div>
           <div class="flex justify-between"><span class="text-gray-500">Selected Plan:</span> <strong id="pendingPlan" class="text-purple-300">--</strong></div>
-          <div class="flex justify-between"><span class="text-gray-500">Status:</span> <span class="text-yellow-400 font-semibold">Awaiting Admin Approval</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Status:</span> <span class="text-yellow-400 font-semibold">Awaiting Admin Verification</span></div>
         </div>
 
-        <div class="pt-2">
-          <button onclick="switchView('dashboard')" class="w-full py-2.5 rounded-xl font-semibold border border-purple-500/30 text-purple-300 hover:bg-purple-900/30 text-sm">
-            Check Client Panel
-          </button>
-        </div>
+        <button onclick="switchView('dashboard')" class="w-full py-2.5 rounded-xl font-semibold border border-purple-500/30 text-purple-300 hover:bg-purple-900/30 text-sm">
+          Check Client Dashboard
+        </button>
       </div>
     </section>
 
@@ -384,117 +396,161 @@
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 class="text-2xl font-bold text-white">Client Panel</h2>
-          <p class="text-sm text-gray-400">Manage your active Minecraft instances and access your Pterodactyl controls.</p>
+          <p class="text-sm text-gray-400">Manage active instances associated with code: <span id="dashActiveCode" class="font-mono text-purple-400 font-bold">--</span></p>
         </div>
-        <button onclick="switchView('plans')" class="btn-cyber px-4 py-2 rounded-xl text-xs font-bold text-white">
-          + Deploy New Server
-        </button>
+        <div class="flex gap-3">
+          <button onclick="switchView('plans')" class="btn-cyber px-4 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-plus"></i> Deploy New Server
+          </button>
+        </div>
       </div>
 
       <!-- Active Servers Container -->
       <div id="userServersContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Rendered via JS -->
+        <!-- Rendered via JavaScript -->
       </div>
     </section>
 
     <!-- VIEW 6: FEEDBACK PAGE -->
-    <section id="view-feedback" class="hidden max-w-xl mx-auto space-y-6">
+    <section id="view-feedback" class="hidden max-w-2xl mx-auto space-y-8">
       <div class="glass-card p-8 rounded-3xl space-y-6">
         <div>
-          <h2 class="text-2xl font-bold text-white">Your Feedback Matters</h2>
-          <p class="text-sm text-gray-400">Let us know how we can improve NOVA GRID.</p>
+          <h2 class="text-2xl font-bold text-white">Community Feedback & Reviews</h2>
+          <p class="text-sm text-gray-400">Rate our performance or read community testaments.</p>
         </div>
-        <form onsubmit="submitFeedback(event)" class="space-y-4">
+
+        <!-- Rating Form -->
+        <form onsubmit="submitFeedback(event)" class="space-y-4 border-b border-purple-900/40 pb-6">
           <div>
-            <label class="block text-xs font-medium text-gray-400 mb-1">Rating</label>
-            <div class="flex gap-2 text-yellow-400 text-xl">
-              <i class="fa-solid fa-star cursor-pointer hover:scale-110"></i>
-              <i class="fa-solid fa-star cursor-pointer hover:scale-110"></i>
-              <i class="fa-solid fa-star cursor-pointer hover:scale-110"></i>
-              <i class="fa-solid fa-star cursor-pointer hover:scale-110"></i>
-              <i class="fa-solid fa-star cursor-pointer hover:scale-110"></i>
+            <label class="block text-xs font-medium text-gray-400 mb-2">Select Rating</label>
+            <div id="starSelector" class="flex gap-2 text-2xl text-gray-600">
+              <i onclick="setStarRating(1)" class="fa-solid fa-star cursor-pointer hover:text-yellow-400"></i>
+              <i onclick="setStarRating(2)" class="fa-solid fa-star cursor-pointer hover:text-yellow-400"></i>
+              <i onclick="setStarRating(3)" class="fa-solid fa-star cursor-pointer hover:text-yellow-400"></i>
+              <i onclick="setStarRating(4)" class="fa-solid fa-star cursor-pointer hover:text-yellow-400"></i>
+              <i onclick="setStarRating(5)" class="fa-solid fa-star cursor-pointer hover:text-yellow-400"></i>
             </div>
           </div>
           <div>
-            <label class="block text-xs font-medium text-gray-400 mb-1">Your Suggestions / Experience</label>
-            <textarea required rows="4" class="w-full bg-black/50 border border-purple-500/30 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Tell us about performance, support, or missing features..."></textarea>
+            <label class="block text-xs font-medium text-gray-400 mb-1">Your Review / Feature Request</label>
+            <textarea id="feedbackComment" required rows="3" class="w-full bg-black/50 border border-purple-500/30 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Share your experience with Nova Grid server speeds..."></textarea>
           </div>
-          <button type="submit" class="w-full btn-cyber py-3 rounded-xl font-bold text-white">
-            Submit Feedback
+          <button type="submit" class="btn-cyber px-6 py-2.5 rounded-xl font-bold text-white text-sm">
+            Post Feedback
           </button>
         </form>
+
+        <!-- Feedback List Wall -->
+        <div class="space-y-4">
+          <h3 class="text-sm font-bold text-gray-300 uppercase tracking-wider">Recent Reviews</h3>
+          <div id="feedbackList" class="space-y-3">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- VIEW 7: ADMIN PANEL -->
     <section id="view-admin" class="hidden space-y-8">
-      <div class="flex justify-between items-center">
+      <div class="flex justify-between items-center border-b border-purple-900/40 pb-4">
         <div>
-          <h2 class="text-2xl font-bold text-white">Admin Dashboard</h2>
-          <p class="text-sm text-gray-400">Verify client payments and provision Pterodactyl access links.</p>
+          <h2 class="text-2xl font-bold text-white">Admin Command Center</h2>
+          <p class="text-sm text-gray-400">Verify client payments and auto-provision server links.</p>
         </div>
-        <span class="px-3 py-1 rounded-full bg-red-950/60 border border-red-500/40 text-red-400 text-xs font-mono">Restricted Admin Access</span>
+        <span class="px-3 py-1 rounded-full bg-red-950/60 border border-red-500/40 text-red-400 text-xs font-mono">Restricted Access</span>
       </div>
 
       <!-- Pending Verification Orders Queue -->
       <div class="glass-card rounded-2xl p-6 space-y-4">
         <h3 class="text-lg font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-hourglass-half text-yellow-400"></i> Pending Order Queue
+          <i class="fa-solid fa-hourglass-half text-yellow-400"></i> Pending Order Approval Queue
         </h3>
         <div id="adminQueue" class="space-y-3">
-          <!-- Populated by JS -->
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- System Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card p-5 rounded-2xl space-y-1">
+          <span class="text-xs text-gray-400 uppercase font-semibold">Total Active Servers</span>
+          <div id="adminTotalServers" class="text-3xl font-black text-purple-300">0</div>
+        </div>
+        <div class="glass-card p-5 rounded-2xl space-y-1">
+          <span class="text-xs text-gray-400 uppercase font-semibold">Pending Queue</span>
+          <div id="adminPendingCount" class="text-3xl font-black text-yellow-400">0</div>
+        </div>
+        <div class="glass-card p-5 rounded-2xl space-y-1">
+          <span class="text-xs text-gray-400 uppercase font-semibold">Total Reviews Logged</span>
+          <div id="adminFeedbackCount" class="text-3xl font-black text-emerald-400">0</div>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- ================= AUTH MODAL ================= -->
-  <div id="authModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+  <!-- ACCESS CODE MODAL -->
+  <div id="accessModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="glass-card w-full max-w-md p-6 rounded-3xl space-y-6 relative border-purple-500/40">
-      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+      <button onclick="closeAccessCodeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
         <i class="fa-solid fa-xmark text-lg"></i>
       </button>
 
       <div class="text-center space-y-1">
-        <h3 id="authModalTitle" class="text-xl font-bold text-white">Sign In to NOVA GRID</h3>
-        <p class="text-xs text-gray-400">Access your server dashboard and manage orders</p>
+        <h3 class="text-xl font-bold text-white">Enter Your Access Code</h3>
+        <p class="text-xs text-gray-400">Enter your 10-character code to open your dashboard</p>
       </div>
 
-      <!-- Social Logins -->
-      <div class="space-y-3">
-        <button onclick="loginWithGoogle()" class="w-full py-2.5 px-4 bg-white text-gray-900 rounded-xl font-semibold text-sm flex items-center justify-center gap-3 hover:bg-gray-100 transition shadow">
-          <i class="fa-brands fa-google text-red-500 text-base"></i> Continue with Google
-        </button>
-        <button onclick="loginWithDiscord()" class="w-full py-2.5 px-4 bg-[#5865F2] text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-3 hover:bg-[#4752C4] transition shadow">
-          <i class="fa-brands fa-discord text-base"></i> Continue with Discord
-        </button>
-      </div>
-
-      <div class="relative flex py-1 items-center">
-        <div class="flex-grow border-t border-purple-900/40"></div>
-        <span class="flex-shrink mx-3 text-xs text-gray-500">OR EMAIL</span>
-        <div class="flex-grow border-t border-purple-900/40"></div>
-      </div>
-
-      <!-- Email / Password Form -->
-      <form onsubmit="handleAuthSubmit(event)" class="space-y-4">
+      <form onsubmit="submitAccessCode(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-medium text-gray-400 mb-1">Email Address</label>
-          <input type="email" required id="authEmail" class="w-full bg-black/50 border border-purple-500/30 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="you@domain.com">
+          <input type="text" id="modalAccessInput" required placeholder="e.g. NG-8921-X3A" class="w-full bg-black/50 border border-purple-500/30 rounded-xl px-4 py-3 text-center text-lg font-mono text-purple-300 uppercase tracking-widest focus:outline-none focus:border-purple-500">
         </div>
-        <div>
-          <label class="block text-xs font-medium text-gray-400 mb-1">Choose Password</label>
-          <input type="password" required id="authPassword" class="w-full bg-black/50 border border-purple-500/30 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="••••••••">
-        </div>
-        <button type="submit" id="authSubmitBtn" class="w-full btn-cyber py-2.5 rounded-xl font-bold text-white text-sm">
-          Sign In
+        <button type="submit" class="w-full btn-cyber py-3 rounded-xl font-bold text-white text-sm">
+          Access Dashboard
         </button>
       </form>
     </div>
   </div>
 
-  <!-- ================= FOOTER ================= -->
+  <!-- SERVER DETAILS MODAL -->
+  <div id="detailsModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-lg p-6 rounded-3xl space-y-6 relative border-purple-500/40">
+      <button onclick="closeDetailsModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="space-y-1">
+        <h3 id="detailsModalTitle" class="text-xl font-bold text-white">Server Credentials</h3>
+        <p class="text-xs text-gray-400">Connection details for Pterodactyl & SFTP</p>
+      </div>
+
+      <div class="space-y-3 text-sm">
+        <div class="p-3 bg-black/50 rounded-xl border border-purple-500/20 flex justify-between items-center">
+          <div>
+            <div class="text-xs text-gray-400">Pterodactyl Panel</div>
+            <a id="detailsPteroUrl" href="#" target="_blank" class="text-purple-400 font-mono text-xs underline">https://panel.novagrid.host</a>
+          </div>
+          <button onclick="copyText('https://panel.novagrid.host')" class="text-xs text-gray-400 hover:text-white"><i class="fa-regular fa-copy"></i></button>
+        </div>
+
+        <div class="p-3 bg-black/50 rounded-xl border border-purple-500/20 flex justify-between items-center">
+          <div>
+            <div class="text-xs text-gray-400">Server IP & Port</div>
+            <div id="detailsServerIp" class="text-white font-mono text-xs">play.novagrid.host:25565</div>
+          </div>
+          <button onclick="copyText(document.getElementById('detailsServerIp').innerText)" class="text-xs text-gray-400 hover:text-white"><i class="fa-regular fa-copy"></i></button>
+        </div>
+
+        <div class="p-3 bg-black/50 rounded-xl border border-purple-500/20 space-y-1">
+          <div class="text-xs text-gray-400">SFTP Credentials</div>
+          <div class="text-xs text-gray-300 font-mono">Host: sftp.novagrid.host:2022</div>
+          <div class="text-xs text-gray-300 font-mono">User: node_user_<span id="detailsSftpUser">102</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
   <footer class="border-t border-purple-900/30 bg-black/40 py-8 px-4 text-center text-xs text-gray-500 space-y-2">
     <div class="flex justify-center items-center gap-2 text-sm font-bold text-gray-300">
       <span>NOVA GRID</span> — Where Power Meets Quality.
@@ -502,19 +558,48 @@
     <p>© 2026 NOVA GRID Hosting. Powered by AMD Ryzen 9 9950X3D.</p>
   </footer>
 
-  <!-- ================= JAVASCRIPT ================= -->
+  <!-- JAVASCRIPT APP LOGIC -->
   <script>
-    // System State
-    let currentUser = null;
-    let selectedPlan = { name: 'Starter', price: '₹299' };
-    
-    // In-memory orders state (Syncs with UI & ready for Supabase)
-    let pendingOrders = [
-      { id: 'ORD-9081', userEmail: 'steve@minecraft.net', plan: 'Pro Tier (8GB)', price: '₹649', date: 'Just now' }
-    ];
-    let activeServers = [];
+    // System State with LocalStorage Persistence
+    let currentAccessCode = localStorage.getItem('ng_access_code') || '';
+    let selectedPlan = { name: 'Starter', price: '299' };
+    let selectedRating = 5;
 
-    // Switch Views
+    let pendingOrders = JSON.parse(localStorage.getItem('ng_pending_orders')) || [
+      { id: 'ORD-9081', accessCode: 'NG-9982-A', plan: 'Pro', price: '649', utr: '409128910481', date: '10 mins ago' }
+    ];
+
+    let activeServers = JSON.parse(localStorage.getItem('ng_active_servers')) || [
+      { id: 'SRV-101', accessCode: 'NG-DEMO-99', plan: 'Pro (8GB)', status: 'Online', ip: 'node1.novagrid.host:25565', cpu: '18%', ram: '3.2 / 8 GB' }
+    ];
+
+    let feedbackReviews = JSON.parse(localStorage.getItem('ng_feedback_reviews')) || [
+      { id: 1, name: 'GamerX_99', rating: 5, comment: '0 TPS lag even with 40+ plugins! Ryzen 9 9950X3D is insanely fast.', date: 'Yesterday', upvotes: 12 },
+      { id: 2, name: 'CraftMaster', rating: 5, comment: 'Instant setup via UPI QR code. Pterodactyl access was ready fast.', date: '3 days ago', upvotes: 8 }
+    ];
+
+    // Initialization
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!currentAccessCode) {
+        currentAccessCode = generateCodeFormat();
+        localStorage.setItem('ng_access_code', currentAccessCode);
+      }
+      updateNavAuthUI();
+      renderFeedbackList();
+      setStarRating(5);
+    });
+
+    function generateCodeFormat() {
+      return 'NG-' + Math.floor(1000 + Math.random() * 9000) + '-' + Math.random().toString(36).substring(2, 5).toUpperCase();
+    }
+
+    function saveState() {
+      localStorage.setItem('ng_pending_orders', JSON.stringify(pendingOrders));
+      localStorage.setItem('ng_active_servers', JSON.stringify(activeServers));
+      localStorage.setItem('ng_feedback_reviews', JSON.stringify(feedbackReviews));
+    }
+
+    // Navigation Switcher
     function switchView(viewId) {
       const views = ['home', 'plans', 'payment', 'pending', 'dashboard', 'feedback', 'admin'];
       views.forEach(v => {
@@ -530,152 +615,297 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Auth Modals
-    function openAuthModal(type) {
-      document.getElementById('authModal').classList.remove('hidden');
-      document.getElementById('authModalTitle').innerText = type === 'signup' ? 'Create NOVA GRID Account' : 'Sign In to NOVA GRID';
-      document.getElementById('authSubmitBtn').innerText = type === 'signup' ? 'Create Account' : 'Sign In';
+    // Access Code Management
+    function updateNavAuthUI() {
+      const container = document.getElementById('authNavArea');
+      container.innerHTML = `
+        <div class="flex items-center gap-2 bg-purple-950/80 border border-purple-500/40 px-3 py-1.5 rounded-xl">
+          <i class="fa-solid fa-key text-purple-400 text-xs"></i>
+          <span class="text-xs font-mono font-bold text-purple-200">${currentAccessCode}</span>
+          <button onclick="copyText('${currentAccessCode}')" class="text-xs text-gray-400 hover:text-white ml-1"><i class="fa-regular fa-copy"></i></button>
+        </div>
+        <button onclick="openAccessCodeModal()" class="text-xs text-purple-400 hover:underline">Change</button>
+      `;
     }
 
-    function closeAuthModal() {
-      document.getElementById('authModal').classList.add('hidden');
+    function generateNewAccessCode() {
+      currentAccessCode = generateCodeFormat();
+      localStorage.setItem('ng_access_code', currentAccessCode);
+      updateNavAuthUI();
+      alert(`Your new Access Code is: ${currentAccessCode}`);
     }
 
-    function loginWithGoogle() {
-      // Direct simulation / Supabase trigger
-      currentUser = { email: 'user.google@gmail.com', name: 'Google User' };
-      updateNavAuth();
-      closeAuthModal();
-      alert('Signed in with Google successfully!');
+    function openAccessCodeModal() {
+      document.getElementById('accessModal').classList.remove('hidden');
     }
 
-    function loginWithDiscord() {
-      currentUser = { email: 'gamer#1337@discord.gg', name: 'Discord User' };
-      updateNavAuth();
-      closeAuthModal();
-      alert('Signed in with Discord successfully!');
+    function closeAccessCodeModal() {
+      document.getElementById('accessModal').classList.add('hidden');
     }
 
-    function handleAuthSubmit(e) {
+    function submitAccessCode(e) {
       e.preventDefault();
-      const email = document.getElementById('authEmail').value;
-      currentUser = { email: email, name: email.split('@')[0] };
-      updateNavAuth();
-      closeAuthModal();
-      alert('Signed in successfully!');
-    }
-
-    function updateNavAuth() {
-      if (currentUser) {
-        document.getElementById('authNavArea').innerHTML = `
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-purple-300 bg-purple-950/80 border border-purple-500/30 px-3 py-1.5 rounded-lg">
-              <i class="fa-solid fa-user text-blue-400"></i> ${currentUser.name}
-            </span>
-          </div>
-        `;
+      const input = document.getElementById('modalAccessInput').value.trim();
+      if (input) {
+        currentAccessCode = input.toUpperCase();
+        localStorage.setItem('ng_access_code', currentAccessCode);
+        updateNavAuthUI();
+        closeAccessCodeModal();
+        switchView('dashboard');
       }
     }
 
-    // Purchase & Payment Workflow
-    function startPurchase(planName, planPrice) {
-      selectedPlan = { name: planName, price: planPrice };
+    // Purchase & Dynamic UPI QR Workflow
+    function startPurchase(planName, price) {
+      selectedPlan = { name: planName, price: price };
       document.getElementById('payPlanName').innerText = `${planName} Plan`;
-      document.getElementById('payPlanPrice').innerText = planPrice;
+      document.getElementById('payPlanPrice').innerText = `₹${price}`;
+      document.getElementById('payAccessCodeInput').value = currentAccessCode;
+
+      // Construct Dynamic UPI Payment URI
+      const upiUri = `upi://pay?pa=novagrid@upi&pn=NOVA%20GRID%20HOSTING&am=${price}&cu=INR`;
+      const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUri)}`;
+      document.getElementById('upiQrImage').src = qrApiUrl;
+
       switchView('payment');
     }
 
-    function confirmPaymentAndSubmit() {
+    function copyUpiId() {
+      copyText('novagrid@upi');
+      alert('UPI ID copied to clipboard!');
+    }
+
+    function confirmPaymentAndSubmit(e) {
+      e.preventDefault();
+      const utr = document.getElementById('payUtrInput').value.trim();
+      
       const newOrder = {
         id: 'ORD-' + Math.floor(1000 + Math.random() * 9000),
-        userEmail: currentUser ? currentUser.email : 'client@novagrid.host',
+        accessCode: currentAccessCode,
         plan: selectedPlan.name,
         price: selectedPlan.price,
+        utr: utr,
         date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
 
       pendingOrders.push(newOrder);
-      document.getElementById('pendingPlan').innerText = `${selectedPlan.name} (${selectedPlan.price})`;
+      saveState();
+
+      document.getElementById('pendingPlan').innerText = `${selectedPlan.name} (₹${selectedPlan.price})`;
+      document.getElementById('pendingAccessCode').innerText = currentAccessCode;
       switchView('pending');
     }
 
-    // Admin Panel Functions
-    function renderAdminQueue() {
-      const container = document.getElementById('adminQueue');
-      if (pendingOrders.length === 0) {
-        container.innerHTML = `<div class="text-sm text-gray-500 py-4 text-center">No pending payments in queue.</div>`;
-        return;
-      }
-
-      container.innerHTML = pendingOrders.map((ord, idx) => `
-        <div class="p-4 rounded-xl bg-purple-950/30 border border-purple-500/20 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <div class="text-sm font-bold text-white">${ord.plan} — ${ord.price}</div>
-            <div class="text-xs text-gray-400">Client: ${ord.userEmail} | ${ord.id} (${ord.date})</div>
-          </div>
-          <button onclick="approveOrder(${idx})" class="btn-cyber px-4 py-2 rounded-lg text-xs font-bold text-white shadow">
-            Approve & Send Panel Link
-          </button>
-        </div>
-      `).join('');
-    }
-
-    function approveOrder(idx) {
-      const ord = pendingOrders[idx];
-      const panelUrl = prompt("Enter Pterodactyl Panel Link for client:", `https://panel.novagrid.host/server/${ord.id.toLowerCase()}`);
-      
-      if (panelUrl) {
-        activeServers.push({
-          id: ord.id,
-          plan: ord.plan,
-          panelUrl: panelUrl,
-          status: 'Online'
-        });
-        pendingOrders.splice(idx, 1);
-        alert('Order approved! Panel link sent to client dashboard.');
-        renderAdminQueue();
-      }
-    }
-
-    // Client Panel Functions
+    // Client Dashboard Rendering
     function renderClientDashboard() {
+      document.getElementById('dashActiveCode').innerText = currentAccessCode;
       const container = document.getElementById('userServersContainer');
-      
-      if (activeServers.length === 0) {
+      const userServers = activeServers.filter(s => s.accessCode === currentAccessCode);
+
+      if (userServers.length === 0) {
         container.innerHTML = `
-          <div class="col-span-full glass-card p-8 rounded-2xl text-center space-y-3">
+          <div class="col-span-2 glass-card p-8 rounded-2xl text-center space-y-3">
             <i class="fa-solid fa-server text-4xl text-purple-500/40"></i>
-            <h3 class="text-lg font-bold text-white">No Active Minecraft Servers</h3>
-            <p class="text-xs text-gray-400">Order a plan or wait for admin approval if you recently submitted payment proof.</p>
-            <button onclick="switchView('plans')" class="btn-cyber px-4 py-2 rounded-xl text-xs font-bold text-white inline-block">Explore Plans</button>
+            <h3 class="text-lg font-bold text-white">No Active Servers Found</h3>
+            <p class="text-xs text-gray-400">There are no deployed servers for access code <span class="font-mono text-purple-300">${currentAccessCode}</span>.</p>
+            <button onclick="switchView('plans')" class="btn-cyber px-5 py-2.5 rounded-xl font-bold text-xs text-white">Browse Plans</button>
           </div>
         `;
         return;
       }
 
-      container.innerHTML = activeServers.map(srv => `
-        <div class="glass-card p-6 rounded-2xl space-y-4 border-green-500/30">
-          <div class="flex justify-between items-center">
-            <span class="text-xs font-bold text-green-400 bg-green-950/60 px-2.5 py-1 rounded border border-green-500/30">
-              ● ${srv.status}
+      container.innerHTML = userServers.map(srv => `
+        <div class="glass-card rounded-2xl p-6 space-y-4 border-purple-500/30">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-xs font-mono text-purple-400 font-bold">${srv.id}</span>
+              <h3 class="text-xl font-bold text-white">${srv.plan} Tier</h3>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold ${srv.status === 'Online' ? 'bg-emerald-950 text-emerald-400 border border-emerald-500/30' : 'bg-red-950 text-red-400 border border-red-500/30'}">
+              <i class="fa-solid fa-circle text-[8px] mr-1"></i> ${srv.status}
             </span>
-            <span class="text-xs font-mono text-gray-400">${srv.id}</span>
           </div>
-          <div>
-            <h3 class="text-lg font-bold text-white">${srv.plan} Minecraft Server</h3>
-            <p class="text-xs text-gray-400">Node: Ryzen 9 9950X3D High-Freq</p>
+
+          <div class="grid grid-cols-2 gap-3 text-xs bg-black/40 p-3 rounded-xl border border-purple-900/30">
+            <div><span class="text-gray-500">CPU Usage:</span> <strong class="text-purple-300">${srv.cpu}</strong></div>
+            <div><span class="text-gray-500">RAM Usage:</span> <strong class="text-purple-300">${srv.ram}</strong></div>
+            <div class="col-span-2 font-mono text-gray-300"><span class="text-gray-500">Server IP:</span> ${srv.ip}</div>
           </div>
-          <a href="${srv.panelUrl}" target="_blank" class="w-full btn-cyber py-2.5 rounded-xl text-center font-bold text-white text-sm block shadow-lg">
-            <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i> Access Pterodactyl Panel
-          </a>
+
+          <div class="flex flex-wrap gap-2 pt-2">
+            <button onclick="toggleServerPower('${srv.id}')" class="px-3 py-1.5 rounded-lg text-xs font-bold ${srv.status === 'Online' ? 'bg-red-900/40 border border-red-500/30 text-red-300 hover:bg-red-800/50' : 'bg-emerald-900/40 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-800/50'}">
+              <i class="fa-solid fa-power-off mr-1"></i> ${srv.status === 'Online' ? 'Stop' : 'Start'}
+            </button>
+            <button onclick="openDetailsModal('${srv.id}', '${srv.ip}')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-900/40 border border-purple-500/30 text-purple-300 hover:bg-purple-800/50">
+              <i class="fa-solid fa-key mr-1"></i> Credentials
+            </button>
+            <a href="https://panel.novagrid.host" target="_blank" class="px-3 py-1.5 rounded-lg text-xs font-bold btn-cyber text-white flex items-center gap-1">
+              Pterodactyl <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+          </div>
         </div>
       `).join('');
     }
 
+    function toggleServerPower(serverId) {
+      const srv = activeServers.find(s => s.id === serverId);
+      if (srv) {
+        srv.status = srv.status === 'Online' ? 'Offline' : 'Online';
+        saveState();
+        renderClientDashboard();
+      }
+    }
+
+    function openDetailsModal(srvId, ip) {
+      document.getElementById('detailsServerIp').innerText = ip;
+      document.getElementById('detailsSftpUser').innerText = srvId.replace('SRV-', '');
+      document.getElementById('detailsModal').classList.remove('hidden');
+    }
+
+    function closeDetailsModal() {
+      document.getElementById('detailsModal').classList.add('hidden');
+    }
+
+    // Feedback System
+    function setStarRating(rating) {
+      selectedRating = rating;
+      const stars = document.getElementById('starSelector').children;
+      for (let i = 0; i < stars.length; i++) {
+        if (i < rating) {
+          stars[i].classList.remove('text-gray-600');
+          stars[i].classList.add('text-yellow-400');
+        } else {
+          stars[i].classList.remove('text-yellow-400');
+          stars[i].classList.add('text-gray-600');
+        }
+      }
+    }
+
     function submitFeedback(e) {
       e.preventDefault();
-      alert('Thank you for your feedback!');
-      switchView('home');
+      const comment = document.getElementById('feedbackComment').value.trim();
+      if (!comment) return;
+
+      const newReview = {
+        id: Date.now(),
+        name: `Client (${currentAccessCode.substring(0, 7)})`,
+        rating: selectedRating,
+        comment: comment,
+        date: 'Just now',
+        upvotes: 0
+      };
+
+      feedbackReviews.unshift(newReview);
+      saveState();
+      document.getElementById('feedbackComment').value = '';
+      renderFeedbackList();
+      alert('Feedback submitted successfully!');
+    }
+
+    function renderFeedbackList() {
+      const container = document.getElementById('feedbackList');
+      container.innerHTML = feedbackReviews.map(f => `
+        <div class="glass-card p-4 rounded-2xl space-y-2 border-purple-500/20">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center gap-2">
+              <strong class="text-sm text-white">${f.name}</strong>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-500/30">Verified Client</span>
+            </div>
+            <span class="text-xs text-gray-500">${f.date}</span>
+          </div>
+          <div class="text-yellow-400 text-xs">
+            ${'<i class="fa-solid fa-star"></i>'.repeat(f.rating)}
+          </div>
+          <p class="text-xs text-gray-300">${f.comment}</p>
+          <div class="flex justify-end pt-1">
+            <button onclick="upvoteReview(${f.id})" class="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1">
+              <i class="fa-solid fa-thumbs-up"></i> ${f.upvotes}
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function upvoteReview(id) {
+      const review = feedbackReviews.find(f => f.id === id);
+      if (review) {
+        review.upvotes++;
+        saveState();
+        renderFeedbackList();
+      }
+    }
+
+    // Admin Console Logic
+    function promptAdminLogin() {
+      const pin = prompt('Enter Admin Access PIN:');
+      if (pin === '1337') {
+        switchView('admin');
+      } else if (pin !== null) {
+        alert('Invalid Admin PIN!');
+      }
+    }
+
+    function renderAdminQueue() {
+      const container = document.getElementById('adminQueue');
+      document.getElementById('adminTotalServers').innerText = activeServers.length;
+      document.getElementById('adminPendingCount').innerText = pendingOrders.length;
+      document.getElementById('adminFeedbackCount').innerText = feedbackReviews.length;
+
+      if (pendingOrders.length === 0) {
+        container.innerHTML = `<div class="text-xs text-gray-500 py-4 text-center">No pending orders in queue.</div>`;
+        return;
+      }
+
+      container.innerHTML = pendingOrders.map((ord, idx) => `
+        <div class="p-4 bg-black/50 border border-purple-500/30 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-mono font-bold text-purple-300">${ord.id}</span>
+              <span class="text-xs text-gray-400 font-mono">Code: ${ord.accessCode}</span>
+            </div>
+            <div class="text-sm font-bold text-white">${ord.plan} Tier — ₹${ord.price}</div>
+            <div class="text-xs font-mono text-amber-400">UTR: ${ord.utr}</div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="approveOrder(${idx})" class="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition">
+              Approve & Deploy
+            </button>
+            <button onclick="rejectOrder(${idx})" class="px-3 py-2 rounded-xl text-xs font-bold bg-red-900/40 border border-red-500/30 text-red-300 hover:bg-red-800/50">
+              Reject
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function approveOrder(index) {
+      const order = pendingOrders[index];
+      const newServer = {
+        id: 'SRV-' + Math.floor(100 + Math.random() * 900),
+        accessCode: order.accessCode,
+        plan: order.plan,
+        status: 'Online',
+        ip: `node${Math.floor(Math.random() * 5 + 1)}.novagrid.host:25565`,
+        cpu: '4%',
+        ram: '1.1 / 8 GB'
+      };
+
+      activeServers.push(newServer);
+      pendingOrders.splice(index, 1);
+      saveState();
+      renderAdminQueue();
+      alert(`Order ${order.id} approved! Server ${newServer.id} generated for code ${order.accessCode}.`);
+    }
+
+    function rejectOrder(index) {
+      pendingOrders.splice(index, 1);
+      saveState();
+      renderAdminQueue();
+    }
+
+    // Helper Utility
+    function copyText(text) {
+      navigator.clipboard.writeText(text);
     }
   </script>
 </body>
